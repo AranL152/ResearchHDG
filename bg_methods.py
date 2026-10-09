@@ -1,16 +1,6 @@
-"""Background-removal methods for the galvanizing waviness project.
-
-Methods
--------
-subtractBaselineMedian  — brightness flattening + global temporal median
-subtractGlobalAverage   — global frame-average background
-subtractSlidingAverage  — sliding-window frame-average background
-
-Reuses helpers from bg_subtract_rolling.py.
-"""
+#Background-removal methods, Reuses helpers from bg_subtract_rolling.py
 from pathlib import Path
 
-import cv2
 import numpy as np
 
 from bg_subtract_rolling import (
@@ -21,16 +11,8 @@ from bg_subtract_rolling import (
 )
 
 
-# ── Brightness flattening ──────────────────────────────────────────
-
+# Divide each frame by its gain so all frames match the reference brightness
 def _flattenBrightness(frames, refBg):
-    """Normalise each frame's mean intensity to match the reference background.
-
-    gain_i = mean(frame_i) / mean(refBg)
-    flattened_i = frame_i / gain_i
-
-    NOTE: uses ALL pixels as "valid" — no mask or ROI is defined yet.
-    """
     refMean = float(np.mean(refBg))
     if refMean == 0.0:
         return frames.astype(np.float32)
@@ -43,20 +25,9 @@ def _flattenBrightness(frames, refBg):
     return flattened
 
 
-# ── Baseline: flatten + global temporal median ──────────────────────
-
+# Flatten brightness then subtract the global temporal median background
 def subtractBaselineMedian(videoPath, outPath=None, diffRange=30,
                            fourcc="mp4v", chunkRows=50):
-    """Brightness-flattened global temporal median background removal.
-
-    1. Load all frames as grayscale.
-    2. Compute an initial global median background from raw frames.
-    3. Flatten each frame's brightness relative to that background.
-    4. Recompute the global median from the flattened frames.
-    5. Subtract the recomputed background from each flattened frame.
-
-    Returns (bg, outPath).
-    """
     videoPath = Path(videoPath)
     if outPath is None:
         outDir = Path("Results")
@@ -67,16 +38,10 @@ def subtractBaselineMedian(videoPath, outPath=None, diffRange=30,
     frames, fps = _read_gray_frames(videoPath)
     n, h, w = frames.shape
 
-    # Initial background from raw frames
     rawBg = _temporal_median(frames, chunkRows)
-
-    # Flatten brightness using the raw background as reference
     flatFrames = _flattenBrightness(frames, rawBg)
-
-    # Recompute background from flattened frames
     bg = _temporal_median(flatFrames, chunkRows)
 
-    # Write output video
     writer = _open_writer(outPath, fourcc, fps, w, h)
     for i in range(n):
         writer.write(_diff_to_uint8(flatFrames[i], bg, diffRange))
@@ -88,14 +53,9 @@ def subtractBaselineMedian(videoPath, outPath=None, diffRange=30,
     return bg, outPath
 
 
-# ── Global frame-average ────────────────────────────────────────────
-
+# Subtract the pixel-wise mean of all frames as background
 def subtractGlobalAverage(videoPath, outPath=None, diffRange=30,
                           fourcc="mp4v"):
-    """Background = pixel-wise mean of all frames.
-
-    Returns (bg, outPath).
-    """
     videoPath = Path(videoPath)
     if outPath is None:
         outDir = Path("Results")
@@ -119,18 +79,9 @@ def subtractGlobalAverage(videoPath, outPath=None, diffRange=30,
     return bg, outPath
 
 
-# ── Sliding-window frame-average ────────────────────────────────────
-
+# Subtract a sliding-window average background, recomputed every `step` frames
 def subtractSlidingAverage(videoPath, outPath=None, win=187, step=30,
                            diffRange=30, fourcc="mp4v"):
-    """Sliding-window frame-average background removal.
-
-    For each block of `step` frames, compute the background as the
-    mean of the `win` frames centred on that block.  Follows the same
-    windowing logic as subtract_rolling_median in bg_subtract_rolling.py.
-
-    Returns outPath (no single background image — it changes over time).
-    """
     videoPath = Path(videoPath)
     if outPath is None:
         outDir = Path("Results")
