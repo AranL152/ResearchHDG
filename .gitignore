@@ -1,0 +1,13 @@
+# Video data (too large for git)
+1/
+2/
+
+# Processed output videos
+Results/
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
