@@ -1,0 +1,196 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[letterpaper,margin=0.6in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks,urlcolor=blue!55!black,linkcolor=blue!55!black,citecolor=blue!55!black]{hyperref}
+\urlstyle{same}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{5pt}{2pt}
+\titlespacing*{\subsection}{0pt}{3pt}{0.5pt}
+\setlist{nosep,leftmargin=1.1em,label=\textbullet}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+
+% In-text citations link straight to the source (DOI or stable URL).
+\makeatletter
+\newcommand{\refurl}[2]{\expandafter\gdef\csname refurl@#1\endcsname{#2}}
+\newcommand{\lc}[1]{[\def\lc@sep{}\@for\lc@k:=#1\do{\lc@sep\def\lc@sep{,\,}%
+  \href{\csname refurl@\lc@k\endcsname}{\begin{NoHyper}\citenum{\lc@k}\end{NoHyper}}}]}
+\makeatother
+\newcommand{\ab}{\textsuperscript{\dag}}
+\newcommand{\doi}[1]{\href{https://doi.org/#1}{doi:\nolinkurl{#1}}}
+
+\refurl{ji}{https://doi.org/10.1063/1.1822933}
+\refurl{zhang96}{https://doi.org/10.1063/1.1146990}
+\refurl{hvasta18}{https://doi.org/10.1088/1741-4326/aa9344}
+\refurl{sun23}{https://doi.org/10.1088/1741-4326/acd864}
+\refurl{jung26}{https://doi.org/10.1063/5.0349250}
+\refurl{gutierrez}{https://doi.org/10.1063/1.4941425}
+\refurl{brenneis}{https://doi.org/10.3390/jne3040023}
+\refurl{zurner}{https://doi.org/10.1088/1361-6501/aa7f58}
+\refurl{ratajczak}{https://doi.org/10.1088/1757-899X/228/1/012023}
+\refurl{horstmann24}{https://doi.org/10.1103/PhysRevFluids.9.054801}
+\refurl{mirhoseini16}{https://doi.org/10.1088/0741-3335/58/12/124005}
+\refurl{kanemura16}{https://doi.org/10.1585/pfr.11.1405117}
+\refurl{kanemura14}{https://www.jspf.or.jp/PLASMA2014/PLACON2014/pdf/20pE-3.pdf}
+\refurl{falcon}{https://doi.org/10.1103/PhysRevLett.98.094503}
+\refurl{jegorovs}{https://doi.org/10.1007/s00348-024-03856-3}
+\refurl{mirhoseini17}{https://doi.org/10.22364/mhd.53.1.6}
+\refurl{hvasta17}{https://doi.org/10.1063/1.4973421}
+\refurl{hiraka}{https://doi.org/10.1585/pfr.18.2405083}
+\refurl{vinnichenko}{https://doi.org/10.1016/j.expthermflusci.2020.110051}
+\refurl{moisy}{https://doi.org/10.1007/s00348-008-0608-z}
+\refurl{jain}{https://doi.org/10.1007/s00348-021-03328-y}
+\refurl{miranda}{https://doi.org/10.2355/isijinternational.45.1626}
+\refurl{suzuki}{https://www.nipponsteel.com/en/tech/report/nsc/pdf/n8910.pdf}
+\refurl{cho}{https://doi.org/10.1002/9781118061800.ch7}
+\refurl{seden}{https://doi.org/10.1088/1757-899X/424/1/012015}
+\refurl{xu24}{https://doi.org/10.2355/isijinternational.ISIJINT-2023-407}
+\refurl{coxmunk}{https://doi.org/10.1364/JOSA.44.000838}
+\refurl{iso}{https://www.iso.org/standard/84786.html}
+
+\begin{document}
+\pagestyle{empty}
+\begin{center}
+{\Large\bfseries Detecting and Quantifying Surface Waviness on Flowing Liquid Metals}
+\end{center}
+\vspace{-6pt}
+
+\section*{Summary}
+{\small
+\begin{tabularx}{\textwidth}{@{}c>{\raggedright}p{3.4cm}>{\raggedright}p{2.7cm}>{\raggedright}p{3.0cm}X@{}}
+\toprule
+& Method & Measures & Shown on & Reported performance \\
+\midrule
+1 & Laser spots reflected onto a screen & slope, wavenumber, phase speed & liquid Ga (driven waves) & geometry calibrated to $<$1\% \lc{ji} \\
+2 & Laser-line / laser-sheet triangulation & height profile & Galinstan channels & 0.7--2.6\% of local depth \lc{jung26}; 0.15\,mm phase-averaged \lc{gutierrez} \\
+3 & Point probes (ground truth) & height time series & GaInSn, Galinstan, Li, Hg & inductive $<$1\,mm at 20\,Hz through an 8\,mm wall \lc{zurner}; ultrasonic $\sim$0.01\,mm \lc{horstmann24}; capacitive 0.1\,ms \lc{falcon} \\
+4 & High-speed imaging through glass & kinematics, morphology & GaInSn in a glass cell & 350\,fps; needs oxide control \lc{jegorovs} \\
+5 & Reflected-pattern deflectometry & full-field slope & water, glycerol, oil only & $\pm4^\circ$ slope \lc{zhang96}; 1\,$\mu$m claimed \lc{vinnichenko} \\
+\bottomrule
+\end{tabularx}}
+
+\section{Detection: how waviness has been measured}
+
+\subsection{Reflected laser spots: the cheapest proven slope measurement on liquid metal}
+\begin{itemize}
+\item \textbf{How it works.} One 2\,mW He--Ne laser is split into up to seven beams aimed at the gallium surface. Their reflections land on a screen, which a gated ICCD camera films at 60\,fps with 0.1--1\,ms gates \lc{ji}.
+\item \textbf{What it gives.} A tilted surface moves the reflected spot. The displacement is $\Delta r_0=2dka$, where $d$ is the screen distance, $k$ the wavenumber and $a$ the amplitude. The phase difference between neighbouring spots gives $k$, and from it the phase speed \lc{ji}.
+\item \textbf{Shown on.} Paddle-driven waves (4--12\,Hz) on liquid gallium, with the geometry calibrated in situ to better than 1\% \lc{ji}.
+\item \textbf{Limits.} 60\,fps was enough only because the waves had a single known frequency and each run was triggered from the camera's gate signal \lc{ji}; freely evolving waves need a faster camera (our inference). The screen must be large enough to catch the deflected spots, which caps the measurable slope, as for other reflection-based slope gauges \lc{zhang96}.
+\end{itemize}
+
+\subsection{Laser-line triangulation: calibrated height profiles, but it needs some diffuse return}
+\begin{itemize}
+\item \textbf{How it works.} A laser sheet draws a line across the metal. A camera viewing at an angle sees the line shift as the surface rises and falls, and the shift converts to height by triangulation.
+\item \textbf{Shown on.} Princeton's open Galinstan channels. The first rig calibrated the laser sheet and camera against an electrical contact probe \lc{hvasta18}; the larger LMX-U rig slid the sheet along the channel and calibrated against solid blocks of known thickness \lc{sun23}. Height uncertainty was 0.7--2.6\% of the local film height, and 6.9\% at worst at single stations \lc{jung26}.
+\item \textbf{Dealing with glare.} Gutiérrez \& Aumaître imaged the laser line from two directions ($\pm37^\circ$) onto one camera sensor, so a glint cannot blind both views at once. Averaging over more than 100 periods of a single-frequency wave gave 0.15\,mm amplitude precision. Their Galinstan sat under about 1\% hydrochloric acid to keep it free of oxide \lc{gutierrez}.
+\item \textbf{Limits.} The camera needs some light scattered back from the surface. Brenneis reports that the oxide's diffuse reflection ``benefits or enables'' optical sensing: a flat, clean GaInSn surface could not be detected at all, while a surface with small waves gave $\sigma<0.35$\,mm with only 36--56\% of points returned \lc{brenneis}.
+\end{itemize}
+
+\subsection{Point probes: the ground truth behind every quantitative result}
+\begin{itemize}
+\item \textbf{Inductive sensor (no contact, works through a wall).} Coils outside the vessel induce currents in the metal and sense the level through an 8\,mm non-conducting wall. Precision is better than 1\,mm at 20\,Hz, within 0.5\,mm of a laser reference. It averages over the coil footprint and must be calibrated before each use \lc{zurner}. On the same GaInSn model, a 2.8\,Hz ultrasonic level sensor was too slow to follow the surface waves, while a 93\,Hz laser scanner and the inductive sensor agreed closely \lc{ratajczak}.
+\item \textbf{Ultrasonic pulse-echo.} 4\,MHz transducers behind a 5\,mm PMMA plate send pulses down through a KOH layer to the GaInSn interface, and the echo time gives the local height. They resolved wave amplitudes of about 0.01\,mm. A tilted surface reflects the echo away, which caps the measurable amplitude at about 20\% of the container radius \lc{horstmann24}.
+\item \textbf{Resistive electrodes.} Wire electrodes in the Galinstan measure the electrical resistance across the layer, which a formula for wire electrodes converts to thickness; the sensor was calibrated against a ruler. Oxide on the electrodes adds an offset that the calibration removes. The authors state it meets a $\sim$10\,ms response requirement \lc{mirhoseini16}.
+\item \textbf{Contact probe.} A needle is stepped vertically into a lithium jet and records how often it touches the metal at each height. Contact frequency versus height gives the wave-height distribution, and its peak marks the mean level \lc{kanemura16}. The same programme used a time-of-flight laser sampling at 500\,kHz with 0.04\,mm uncertainty (conference abstract) \lc{kanemura14}.
+\item \textbf{Capacitive wire.} An insulated 0.1\,mm wire dipped into mercury forms a capacitor with it, so the capacitance tracks the local height: range 10\,$\mu$m--2\,cm, 0.1\,ms response \lc{falcon}. We found no use in gallium alloys.
+\end{itemize}
+
+\subsection{Imaging through a wall: demonstrated only with oxide control and a dark room}
+\begin{itemize}
+\item \textbf{Through glass.} Jegorovs et al.\ filmed GaInSn in a 3\,mm glass cell at 350\,fps, backlit in a darkened room because the metal is ``mirror-like''. Oxide coated the walls ``in a matter of minutes'' unless the metal was kept in about 25\% HCl, and any metal film wetting the glass is opaque \lc{jegorovs}.
+\item \textbf{From above, no wall.} Other gallium-alloy studies filmed open surfaces from above: particle velocimetry of the surface at 2000\,fps \lc{mirhoseini17}, tracking of floating tracers at 120\,fps \lc{sun23}, and 60\,Hz infrared imaging of oxide particles, which emit far more infrared than clean metal \lc{hvasta17}.
+\item \textbf{Closest to our flow.} A $\sim$1\,m/s GaInSn channel in air used high-speed video to measure the position and speed of wave patterns, but no wave heights \lc{hiraka}.
+\end{itemize}
+
+\subsection{Full-field reflected-pattern slope: promising, not yet shown on liquid metal}
+\begin{itemize}
+\item \textbf{How it works.} The camera sees a known pattern reflected in the liquid. Surface slope distorts the reflection; comparing it with an image of the flat surface gives the slope at every point, which can be integrated to height.
+\item \textbf{Colour-coded screen.} The colour seen in the reflection encodes slope: hue gives its direction and saturation its magnitude. It was demonstrated to $\pm4^\circ$ on water. Reflection gives 2$^\circ$ of ray deflection per degree of slope, against about $\tfrac14^\circ$ for refraction, but over a smaller slope range \lc{zhang96}.
+\item \textbf{Moon-glade background-oriented schlieren.} The camera and a backlit pattern both sit above the liquid. The authors claim it suits opaque liquids and resolves 1\,$\mu$m, but tested it only on glycerol, water and silicone oil \lc{vinnichenko}.
+\item \textbf{Not applicable.} Free-surface synthetic schlieren \lc{moisy} and total-internal-reflection deflectometry \lc{jain} need light to pass through the liquid, so they cannot work on an opaque metal (our inference).
+\end{itemize}
+
+\section{Quantification: what to compute}
+{\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright}p{2.6cm}X>{\raggedright\arraybackslash}p{1.9cm}@{}}
+\toprule
+Metric & How it is computed and what it shows & Source \\
+\midrule
+Wave-height statistics & Split a height record $\eta(t)$ into waves at each upward crossing of the mean level, then report the mean height $\bar H$, the significant height $H_s\approx1.6\,\bar H$ and the maximum $H_{\max}$. On a lithium jet, heights followed a Rayleigh distribution and periods a log-normal one. & \lc{kanemura16,kanemura14} \\
+\addlinespace
+Frequency spectrum & The power spectral density of the level record shows the dominant wave frequencies (peaks at 1.2, 1.8 and 2.1\,Hz in a 1/3-scale water model of a casting mould). Nippon Steel compares such peaks with the sloshing modes $f_N=\tfrac{1}{2\pi}\sqrt{N\pi g/L}$ of a vessel of width $L$. & \lc{miranda,suzuki} \\
+\addlinespace
+Sampling rate & Sample faster than twice the highest wave frequency: a 2.8\,Hz sensor could not follow 2.7\,Hz waves. & \lc{zurner} \\
+\addlinespace
+Spatial variability & Record the level at several stations and take the standard deviation over time at each, $\sigma_h(x)$. Low values mark standing-wave nodes, and a single sensor placed at a node misses fluctuations elsewhere. & \lc{cho} \\
+\addlinespace
+Asymmetry & $\mathrm{AI}=100\,(h_L-h_R)/h_{\mathrm{ref}}$, with $h_L$, $h_R$ the standing-wave heights on each side and $h_{\mathrm{ref}}=20$\,mm. A large spread of AI over time indicates swaying flow. & \lc{seden} \\
+\addlinespace
+Level-band fraction & Percentage of level fluctuation that stays within $\pm3$\,mm: 57--74\% vs.\ 92--99\% for two nozzle designs in a water model. & \lc{xu24} \\
+\addlinespace
+Slope distribution from glints & Cox \& Munk derived the distribution of sea-surface slopes from the brightness of sun glitter in photographs; this requires knowing where the light and camera are. & \lc{coxmunk} \\
+\addlinespace
+Slope to height & For laser spots, $a=\Delta r_0/(2dk)$. For a full slope field, integrate by least squares. & \lc{ji,moisy,jain} \\
+\addlinespace
+Waviness vs.\ roughness & A Gaussian profile filter separates the large- and small-scale components of a surface profile. & \lc{iso} \\
+\bottomrule
+\end{tabularx}}
+
+\section{Oxide control in the cited rigs}
+\begin{itemize}
+\item \textbf{Gas cover.} Princeton's Galinstan rigs and the KIT sensor tests ran under argon \lc{sun23,brenneis,hvasta17}. For pure gallium, Ji et al.\ replaced the air with nitrogen and argon ``without apparent success'', but 1\,M HCl cleaned a gallium sample \lc{ji}.
+\item \textbf{Liquid cover.} Others kept the metal under a liquid layer: about 1\% HCl \lc{gutierrez}, about 25\% HCl \lc{jegorovs} or KOH \lc{horstmann24}. The Columbia group skimmed the oxide off and Teflon-coated parts of the setup \lc{mirhoseini16}.
+\item \textbf{Why it matters.} With an oxide skin, the reflected signal follows ``the slowly evolving membrane'' rather than the flow \lc{mirhoseini16}. Ji et al.\ suggest oxide damps waves \lc{ji}, and Hiraka et al.\ suspect it shifted their results between runs \lc{hiraka}.
+\end{itemize}
+
+\vspace{-2pt}
+\begin{multicols}{2}
+\footnotesize
+\setlength{\columnsep}{14pt}
+\renewcommand{\refname}{\normalsize References}
+\begin{thebibliography}{99}
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}
+\bibitem{ji} H. Ji, W. Fox, D. Pace, H. L. Rappaport, ``Study of small-amplitude magnetohydrodynamic surface waves on liquid metal,'' \emph{Phys.\ Plasmas} \textbf{12}(1), 012102 (2005). \doi{10.1063/1.1822933}
+\bibitem{jung26} M. K. Jung et al., ``Extension of a multi-region free-surface MHD solver beyond the inductionless approximation,'' \emph{Phys.\ Plasmas} \textbf{33}(10), 103903 (2026). \doi{10.1063/5.0349250}
+\bibitem{gutierrez} P. Gutiérrez, S. Aumaître, ``Surface waves propagating on a turbulent flow,'' \emph{Phys.\ Fluids} \textbf{28}(2), 025107 (2016). \doi{10.1063/1.4941425}
+\bibitem{zurner} T. Zürner, M. Ratajczak, T. Wondrak, S. Eckert, ``Inductive detection of the free surface of liquid metals,'' \emph{Meas.\ Sci.\ Technol.} \textbf{28}(11), 115301 (2017). \doi{10.1088/1361-6501/aa7f58}
+\bibitem{horstmann24} G. M. Horstmann et al., ``Generation of interfacial waves by rotating magnetic fields,'' \emph{Phys.\ Rev.\ Fluids} \textbf{9}(5), 054801 (2024). \doi{10.1103/PhysRevFluids.9.054801}
+\bibitem{falcon} E. Falcon, C. Laroche, S. Fauve, ``Observation of gravity-capillary wave turbulence,'' \emph{Phys.\ Rev.\ Lett.} \textbf{98}(9), 094503 (2007). \doi{10.1103/PhysRevLett.98.094503}
+\bibitem{jegorovs} A. Jegorovs et al., ``Optical imaging of MHD bubble flow in Hele-Shaw liquid metal cells,'' \emph{Exp.\ Fluids} \textbf{65}(8), 113 (2024). \doi{10.1007/s00348-024-03856-3}
+\bibitem{zhang96} X. Zhang, D. Dabiri, M. Gharib, ``Optical mapping of fluid density interfaces: concepts and implementations,'' \emph{Rev.\ Sci.\ Instrum.} \textbf{67}(5), 1858--1868 (1996). \doi{10.1063/1.1146990}
+\bibitem{vinnichenko} N. A. Vinnichenko et al., ``Measurements of liquid surface relief with moon-glade background oriented Schlieren technique,'' \emph{Exp.\ Therm.\ Fluid Sci.} \textbf{114}, 110051 (2020). \doi{10.1016/j.expthermflusci.2020.110051}
+\bibitem{hvasta18} M. G. Hvasta et al., ``Demonstrating electromagnetic control of free-surface, liquid-metal flows relevant to fusion reactors,'' \emph{Nucl.\ Fusion} \textbf{58}(1), 016022 (2018). \doi{10.1088/1741-4326/aa9344}
+\bibitem{sun23} Z. Sun et al., ``Magnetohydrodynamics in free surface liquid metal flow relevant to plasma-facing components,'' \emph{Nucl.\ Fusion} \textbf{63}(7), 076022 (2023). \doi{10.1088/1741-4326/acd864}
+\bibitem{brenneis} B. Brenneis, ``Long range optical distance sensors for liquid metal free surface detection,'' \emph{J.\ Nucl.\ Eng.} \textbf{3}(4), 364--372 (2022). \doi{10.3390/jne3040023}
+\bibitem{ratajczak} M. Ratajczak et al., ``Measurement techniques for liquid metals,'' \emph{IOP Conf.\ Ser.: Mater.\ Sci.\ Eng.} \textbf{228}, 012023 (2017). \doi{10.1088/1757-899X/228/1/012023}
+\bibitem{mirhoseini16} S. M. H. Mirhoseini, F. A. Volpe, ``Resistive sensor and electromagnetic actuator for feedback stabilization of liquid metal walls in fusion reactors,'' \emph{Plasma Phys.\ Control.\ Fusion} \textbf{58}(12), 124005 (2016). \doi{10.1088/0741-3335/58/12/124005}
+\bibitem{kanemura16} T. Kanemura et al., ``Free-surface characteristics of a liquid Li wall jet,'' \emph{Plasma Fusion Res.} \textbf{11}, 1405117 (2016). \doi{10.1585/pfr.11.1405117}
+\bibitem{kanemura14} T. Kanemura et al., ``Measurement of Li-target thickness in the IFMIF/EVEDA Li Test Loop,'' PLASMA2014 (JSPF), abstract 20pE-3 (2014). \href{https://www.jspf.or.jp/PLASMA2014/PLACON2014/pdf/20pE-3.pdf}{jspf.or.jp}
+\bibitem{mirhoseini17} S. M. H. Mirhoseini, R. R. Diaz-Pacheco, F. A. Volpe, ``Passive and active electromagnetic stabilization of free-surface liquid metal flows,'' \emph{Magnetohydrodynamics} \textbf{53}(1), 45--54 (2017). \doi{10.22364/mhd.53.1.6}
+\bibitem{hvasta17} M. G. Hvasta, E. Kolemen, A. Fisher, ``Application of IR imaging for free-surface velocity measurement in liquid-metal systems,'' \emph{Rev.\ Sci.\ Instrum.} \textbf{88}(1), 013501 (2017). \doi{10.1063/1.4973421}
+\bibitem{hiraka} R. Hiraka et al., ``Deformation induced by magnetic field on GaInSn flow surface,'' \emph{Plasma Fusion Res.} \textbf{18}, 2405083 (2023). \doi{10.1585/pfr.18.2405083}
+\bibitem{moisy} F. Moisy, M. Rabaud, K. Salsac, ``A synthetic Schlieren method for the measurement of the topography of a liquid interface,'' \emph{Exp.\ Fluids} \textbf{46}(6), 1021--1036 (2009). \doi{10.1007/s00348-008-0608-z}
+\bibitem{jain} U. Jain, A. Gauthier, D. van der Meer, ``Total-internal-reflection deflectometry for measuring small deflections of a fluid surface,'' \emph{Exp.\ Fluids} \textbf{62}(11), 235 (2021). \doi{10.1007/s00348-021-03328-y}
+\bibitem{miranda} R. Miranda et al., ``Experimental and numerical analysis of the free surface in a water model of a slab continuous casting mold,'' \emph{ISIJ Int.} \textbf{45}(11), 1626--1635 (2005). \doi{10.2355/isijinternational.45.1626}
+\bibitem{suzuki} D. Suzuki, ``Formulation of mold level control model by molten steel flow analysis method,'' \emph{Nippon Steel Tech.\ Rep.} \textbf{89}, 46--49 (2004). \href{https://www.nipponsteel.com/en/tech/report/nsc/pdf/n8910.pdf}{nipponsteel.com}
+\bibitem{cho} S.-M. Cho et al., ``Measurement of transient meniscus flow in steel continuous casters and effect of electromagnetic braking,'' in \emph{Sensors, Sampling, and Simulation for Process Control}, TMS/Wiley, 59--66 (2011). \doi{10.1002/9781118061800.ch7}
+\bibitem{seden} M. Sedén, N. Jacobson, ``Online flow control with mold flow measurements and simultaneous EM braking and stirring,'' \emph{IOP Conf.\ Ser.: Mater.\ Sci.\ Eng.} \textbf{424}, 012015 (2018). \doi{10.1088/1757-899X/424/1/012015}
+\bibitem{xu24} R. Xu et al., ``Effect of submerged entry nozzle structure on fluid flow, slag entrainment, and solidification process in a slab continuous casting mold,'' \emph{ISIJ Int.} \textbf{64}(6), 1010--1018 (2024). \doi{10.2355/isijinternational.ISIJINT-2023-407}
+\bibitem{coxmunk} C. Cox, W. Munk, ``Measurement of the roughness of the sea surface from photographs of the sun's glitter,'' \emph{J.\ Opt.\ Soc.\ Am.} \textbf{44}(11), 838--850 (1954). \doi{10.1364/JOSA.44.000838}
+\bibitem{iso} ISO 16610-21:2025, \emph{Geometrical product specifications (GPS) --- Filtration --- Part 21: Linear profile filters: Gaussian filters}, ISO (2025). \href{https://www.iso.org/standard/84786.html}{iso.org}
+\end{thebibliography}
+\end{multicols}
+\end{document}
